@@ -16,6 +16,7 @@ export default function CardComponent({ country }: any) {
         backgroundColor:
           themeMode === "dark" ? "primary.dark" : "primary.light",
       }}
+      elevation={4}
     >
       <CardActionArea>
         <CardMedia

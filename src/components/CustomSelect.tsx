@@ -50,10 +50,9 @@ const CustomSelect = ({
 
         colors: {
           ...theme.colors,
-          primary25: "blue",
-          primary: "black",
-          primary50: "#f000ff",
-          neutral5: "green",
+          primary25: "hsl(209, 23%, 22%)",
+          primary: "#030303",
+          primary50: "#050505",
         },
       })}
     />
