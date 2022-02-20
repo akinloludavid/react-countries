@@ -15,14 +15,14 @@ export const useGetCountryByName = (countryName: string) => {
   const queryClient: any = useQueryClient();
   const { data, isLoading, isError, error } = useQuery(
     [COUNTRY, countryName],
-    getCountryByName
-    // {
-    //   initialData: () => {
-    //     return queryClient
-    //       .getQueryData(ALL_COUNTRIES)
-    //       ?.find((d: any) => d.name === countryName);
-    //   },
-    // }
+    getCountryByName,
+    {
+      initialData: () => {
+        return queryClient
+          .getQueryData(ALL_COUNTRIES)
+          ?.find((d: any) => d.name === countryName);
+      },
+    }
   );
 
   return { data, isLoading, isError, error };
