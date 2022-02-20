@@ -1,10 +1,11 @@
-import { Container, Grid, TextField } from "@mui/material";
+import { Alert, AlertTitle, Container, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CardComponent from "../components/CustomCard";
 import { useAppContext } from "../contexts/AppContext";
 import { useGetAllCountries } from "../lib/query/country";
 import CustomSelect from "../components/CustomSelect";
+import HomePageLoader from "../components/Loaders/HomePageLoader";
 const options = [
   { label: "Africa", value: "africa" },
   { label: "America", value: "america" },
@@ -17,23 +18,23 @@ const getFilteredCountries = (
   query: string,
   regionName: string
 ) => {
-  return arr?.filter((country) =>
-    country.name.toLowerCase().includes(
-      query.toLowerCase()
-      // country.region.toLowerCase() === regionName.toLowerCase()
+  return arr
+    ?.filter((country) =>
+      country.region.toLowerCase().includes(regionName.toLowerCase())
     )
-  );
-
-  // .filter((el: any) => el.region.toLowerCase() === regionName.toLowerCase());
+    .filter((el: any) => el.name.toLowerCase().includes(query.toLowerCase()));
 };
 const Home = () => {
   const [countryNameQuery, setCountryNameQuery] = useState("");
   const [regionName, setRegionName] = useState("");
-  const { data: allCountries } = useGetAllCountries();
+  const {
+    data: allCountries,
+    isLoading,
+    isError,
+    error,
+  }: any = useGetAllCountries();
   const { themeMode }: any = useAppContext();
   const mainBgColor = themeMode === "dark" ? "primary.dark" : "primary.light";
-  console.log(allCountries);
-  console.log(countryNameQuery);
 
   interface IOption {
     label: string;
@@ -53,7 +54,6 @@ const Home = () => {
     regionName
   );
 
-  console.log(filteredCountries);
   return (
     <Container
       maxWidth="xl"
@@ -65,39 +65,58 @@ const Home = () => {
         paddingTop: "20vh",
       }}
     >
-      <Grid container justifyContent="space-between" marginBottom={"40px"}>
-        <Grid item md={3} xs={12}>
-          <TextField
-            id="outlined-basic"
-            label="Outlined"
-            variant="outlined"
-            value={countryNameQuery}
-            onChange={(e) => {
-              setCountryNameQuery(e.target.value);
-            }}
-            fullWidth
-          />
-        </Grid>
-        <Grid item md={3} xs={12}>
-          <CustomSelect
-            placeholder="Select a region"
-            options={options}
-            onChange={handleRegionNameChange}
-          />
-        </Grid>
-      </Grid>
-      <Grid container spacing={4} justifyContent="center" alignItems={"center"}>
-        {filteredCountries?.map((country: any) => (
-          <Grid item xs={12} md={3} key={country.name}>
-            <Link
-              to={`/country/${country.name}`}
-              style={{ textDecoration: "none" }}
-            >
-              <CardComponent country={country} />
-            </Link>
+      {isLoading ? (
+        <HomePageLoader />
+      ) : (
+        <>
+          <Grid container justifyContent="space-between" marginBottom={"40px"}>
+            <Grid item md={3} xs={12}>
+              <TextField
+                id="outlined-basic"
+                label="Countries"
+                variant="outlined"
+                value={countryNameQuery}
+                onChange={(e) => {
+                  setCountryNameQuery(e.target.value);
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item md={3} xs={12}>
+              <CustomSelect
+                placeholder="Select a region"
+                options={options}
+                onChange={handleRegionNameChange}
+              />
+            </Grid>
           </Grid>
-        ))}
-      </Grid>
+          <Grid
+            container
+            spacing={4}
+            justifyContent="center"
+            alignItems={"center"}
+          >
+            {filteredCountries?.map((country: any) => (
+              <Grid item xs={12} md={3} key={country.name}>
+                <Link
+                  to={`/country/${country.name}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <CardComponent country={country} />
+                </Link>
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      )}
+
+      {isError && (
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {error?.message ||
+            "Oops, something went wrong. Try refreshing your page."}
+        </Alert>
+      )}
     </Container>
   );
 };
