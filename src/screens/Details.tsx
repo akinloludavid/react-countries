@@ -8,7 +8,7 @@ const Details = () => {
   const { countryName = "" } = useParams();
   const navigate = useNavigate();
   const backIcon = <ArrowBackIcon />;
-  const { themeMode, textColor, secondaryColor }: any = useAppContext();
+  const { themeMode, textColor }: any = useAppContext();
   const { data } = useGetCountryByName(countryName);
   const country = data && data[0];
   console.log(country);
