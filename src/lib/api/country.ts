@@ -9,7 +9,6 @@ export const getAllCountries = async () => {
 export const getCountryByName = async (params:any) => {
     const {queryKey} = params 
     const [, countryName] = queryKey;
-
     const res = await axios.get(`https://restcountries.com/v2/name/${countryName}`)
     return res.data
 }
