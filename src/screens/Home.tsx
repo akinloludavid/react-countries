@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Alert,
   AlertTitle,
@@ -5,18 +6,16 @@ import {
   Grid,
   TextField,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CardComponent from "../components/CustomCard";
 import { useAppContext } from "../contexts/AppContext";
 import { useGetAllCountries } from "../lib/query/country";
 import HomePageLoader from "../components/Loaders/HomePageLoader";
 const options = [
-  { label: "All", value: "" },
+  // { label: "All", value: "" },
 
   { label: "Africa", value: "africa" },
   { label: "America", value: "america" },
@@ -35,6 +34,7 @@ const getFilteredCountries = (
     )
     ?.filter((el: any) => el.name.toLowerCase().includes(query.toLowerCase()));
 };
+
 const Home = () => {
   const [countryNameQuery, setCountryNameQuery] = useState("");
   const [regionName, setRegionName] = useState("");
@@ -97,9 +97,15 @@ const Home = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item md={3} sm={3} xs={12} mt={{ xs: 4, md: 0 }}>
+            <Grid
+              item
+              md={3}
+              sm={3}
+              xs={12}
+              mt={{ xs: 4, sm: 0, md: 0, lg: 0 }}
+            >
               <FormControl fullWidth>
-                <InputLabel
+                {/* <InputLabel
                   id="demo-simple-select-label"
                   sx={{
                     color:
@@ -107,13 +113,14 @@ const Home = () => {
                   }}
                 >
                   Region
-                </InputLabel>
+                </InputLabel> */}
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   placeholder="Region"
                   value={regionName}
-                  label="Region"
+                  displayEmpty
+                  // label="Region"
                   onChange={handleRegionNameChange}
                   sx={{
                     boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
@@ -125,8 +132,12 @@ const Home = () => {
                     },
                   }}
                 >
+                  <MenuItem value="">
+                    <em>Regions</em>
+                  </MenuItem>
                   {options.map((option) => (
                     <MenuItem
+                      className="region"
                       sx={{
                         backgroundColor:
                           themeMode === "light" ? "#f3f3f3" : "primary.dark",
